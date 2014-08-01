@@ -52,7 +52,7 @@ foreach my $tr (@tr) {
 		'Jmeno' => $jmeno,
 		'Prijmeni' => $prijmeni,
 		'Odbor' => $odbor,
-		'E-mail' => undef,
+		'E_mail' => undef,
 		'Klapka' => $klapka,
 		'Poznamka' => $poznamka,
 	});
