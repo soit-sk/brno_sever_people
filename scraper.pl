@@ -41,8 +41,12 @@ shift @tr;
 foreach my $tr (@tr) {
 	my @td = $tr->find_by_tag_name('td');
 	my ($titul_pred, $jmeno, $prijmeni, $odbor, $klapka, $poznamka)
-		= map { $_->as_text } ($td[0], $td[1], $td[2], $td[3], $td[5],
-		$td[6]);
+		= map {
+			my $ret = $_->as_text;
+			remove_trailing(\$ret);
+			$ret = $ret =~ m/^\s*$/ms ? undef : $ret;
+			$ret;
+		} ($td[0], $td[1], $td[2], $td[3], $td[5], $td[6]);
 	my $titul_za;
 	if ($prijmeni =~ m/^(\w+),\s*([\w\.]+)$/ms) {
 		$prijmeni = $1;
@@ -77,4 +81,12 @@ sub get_root {
 	my $tree = HTML::TreeBuilder->new;
 	$tree->parse(decode_utf8($data));
 	return $tree->elementify;
+}
+
+# Removing trailing whitespace.
+sub remove_trailing {
+	my $string_sr = shift;
+	${$string_sr} =~ s/^\s*//ms;
+	${$string_sr} =~ s/\s*$//ms;
+	return;
 }
