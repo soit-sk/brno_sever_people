@@ -40,15 +40,21 @@ my @tr = $table->find_by_tag_name('tr');
 shift @tr;
 foreach my $tr (@tr) {
 	my @td = $tr->find_by_tag_name('td');
-	my ($titul, $jmeno, $prijmeni, $odbor, $klapka, $poznamka)
+	my ($titul_pred, $jmeno, $prijmeni, $odbor, $klapka, $poznamka)
 		= map { $_->as_text } ($td[0], $td[1], $td[2], $td[3], $td[5],
 		$td[6]);
+	my $titul_za;
+	if ($prijmeni =~ m/^(\w+),\s*([\w\.]+)$/ms) {
+		$prijmeni = $1;
+		$titul_za = $2;
+	}
 	# TODO E-mail
 	
 	# Save.
 	print encode_utf8($jmeno.' '.$prijmeni)."\n";
 	$dt->insert({
-		'Titul' => $titul,
+		'Titul_pred' => $titul_pred,
+		'Titul_za' => $titul_za,
 		'Jmeno' => $jmeno,
 		'Prijmeni' => $prijmeni,
 		'Odbor' => $odbor,
