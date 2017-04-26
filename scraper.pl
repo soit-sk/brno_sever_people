@@ -56,7 +56,7 @@ foreach my $tr (@tr) {
 	
 	# Save.
 	print encode_utf8($jmeno.' '.$prijmeni)."\n";
-	$dt->insert({
+	$dt->upsert({
 		'Titul_pred' => $titul_pred,
 		'Titul_za' => $titul_za,
 		'Jmeno' => $jmeno,
@@ -67,6 +67,7 @@ foreach my $tr (@tr) {
 		'Poznamka' => $poznamka,
 	});
 } 
+$dt->create_index(['Jmeno', 'Prijmeni', 'Odbor'], undef, 'IF NOT EXISTS', 'UNIQUE');
 
 # Get root of HTML::TreeBuilder object.
 sub get_root {
